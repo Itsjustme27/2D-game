@@ -1,4 +1,8 @@
+package main;
 import javax.swing.JPanel;
+
+import entity.Player;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,7 +15,7 @@ public class GamePanel extends JPanel implements Runnable{
     final int scale = 3;
 
     //Resolution
-    final int tileSize = originalTileSize * scale;  //48x48
+    public final int tileSize = originalTileSize * scale;  //48x48
 
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
@@ -22,10 +26,11 @@ public class GamePanel extends JPanel implements Runnable{
     KeyHandler keyH = new KeyHandler();
 
     Thread gameThread;
+    Player player = new Player(this, keyH);
 
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
+    // int playerX = 100;
+    // int playerY = 100;
+    // int playerSpeed = 4;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));  // sets the size of this class(JPanel)
@@ -48,7 +53,7 @@ public class GamePanel extends JPanel implements Runnable{
         // GAMELOOP
         // 1) UPDATE : update information such as character positions 
         // 2) DRAW : draw the screen with updated information
-        double drawInterval = 1000000000/FPS;
+        double drawInterval = 1000000000/FPS;  
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -82,15 +87,7 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update() {
-        if(keyH.upPressed == true) {
-            playerY -= playerSpeed;
-        }else if(keyH.downPressed == true) {
-            playerY += playerSpeed;
-        }else if(keyH.leftPressed == true) {
-            playerX -= playerSpeed;
-        }else if(keyH.rightPressed) {
-            playerX += playerSpeed;
-        }
+        player.update();
     }
 
     public void paintComponent(Graphics g) {
@@ -98,8 +95,8 @@ public class GamePanel extends JPanel implements Runnable{
 
         Graphics2D g2 = (Graphics2D)g;
 
-        g2.setColor(Color.white);
-        g2.fillRect(playerX, playerY,  tileSize, tileSize);  
+        player.draw(g2);
+
         g2.dispose();
     }  
 }
